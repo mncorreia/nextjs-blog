@@ -4,6 +4,7 @@ import utilStyles from '../styles/utils.module.scss';
 import Link from 'next/link'
 import { getSortedPostsData } from '../../lib/posts'
 import { generateText } from '../../lib/lorem-ipsum';
+import Date from "../../components/date";
 
 export default function Home({posts, bio}) {
   return (
@@ -17,12 +18,12 @@ export default function Home({posts, bio}) {
           (This is a sample website - you’ll be building a site like this on{' '}
           <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
         </p>
-        <p>
+        {/* <p>
           See here{' '}
           <Link href="/posts/first-post">
             <a>my first post</a>
           </Link>
-        </p>
+        </p> */}
       </section>
       {/* Add this <section> tag below the existing <section> tag */}
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
@@ -30,8 +31,14 @@ export default function Home({posts, bio}) {
         <ul className={utilStyles.list}>
           {posts.map(({ id, date, title }) => (
             <li className={utilStyles.listItem} key={id}>
-              <span>{title}</span>
-              <span>{date}</span>
+              <Link href={`/posts/${id}`}>
+                <a>{title}</a>
+              </Link>
+              <small className={utilStyles.lightText}>
+                <span>
+                  <Date dateString={date} />
+                </span>
+              </small>
             </li>
           ))}
         </ul>
@@ -45,7 +52,7 @@ export async function getStaticProps() {
     count: 1,
     units: "paragraphs",
   });
-  const posts = getSortedPostsData();
+  const posts = await getSortedPostsData();
   return {
     props: {
       posts,
